@@ -12,3 +12,6 @@ class Range:
 
     def is_in_range(self, value):
         return value <= self.max and value >= self.min
+
+    def mult(self, a):
+        return Range(self.min*a, self.max*a)
