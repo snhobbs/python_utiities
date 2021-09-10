@@ -11,7 +11,7 @@ def TransformBytesToDataType(dtype, data : bytes, byteorder="big"):
             return data.decode("utf-8")
         return "".join([chr(pt) for pt in data])
 
-    signed = dtype[0]=="u"
+    signed = dtype[0] != "u"
     return int.from_bytes(data, byteorder=byteorder, signed=signed)
 
 def bytes_to_int32(data, byteorder="big", endianness=None):
