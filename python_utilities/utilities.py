@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def RegistersToBytes(registers):
   text = []
   for register in registers:
@@ -17,4 +20,24 @@ def TransformBytesToDataType(dtype, data : bytes, byteorder="big"):
 
 def bytes_to_int32(data, byteorder="big"):
     return TransformBytesToDataType("int32", data, byteorder)
+
+def average_vector(vectors):
+    '''
+    Takes a list of vectors and returns a list of the averaged vectors
+    '''
+    d = []
+    for pt in zip(*list(vectors)):
+        d.append(np.mean(pt))
+    return d
+
+def fit_exponential(x, y, p0=None):
+    import scipy, math
+    import numpy as np
+    def fit_line(x, r, g):
+        return r + g*x
+    weights = ([1/abs(math.log(pt)) for pt in list(y)])
+    fit, cov = scipy.optimize.curve_fit(fit_line, x, np.log(y), p0=p0, sigma=weights)
+    r0=math.exp(fit[0])
+    g = fit[1]
+    return g, r0
 
