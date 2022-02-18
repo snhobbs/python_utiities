@@ -5,16 +5,15 @@ def RegistersToBytes(registers):
       text.append((register&0xff))
   return bytes(text)
 
-def DecodeText(data: list):
-    return RegistersToBytes(data).decode("utf-8")
-
 def TransformBytesToDataType(dtype, data : bytes, byteorder="big"):
     if dtype == "string":
-        dtype = "uint8"
-        return data.decode("utf-8")
-    signed = dtype[0]=="u"
+        if isinstance(data, bytes):
+            return data.decode("utf-8")
+        return "".join([chr(pt) for pt in data])
+
+    signed = dtype[0] != "u"
     return int.from_bytes(data, byteorder=byteorder, signed=signed)
 
-def bytes_to_int32(data, byteorder="big"):
+def bytes_to_int32(data, byteorder="big", endianness=None):
     return TransformBytesToDataType("int32", data, byteorder)
 
