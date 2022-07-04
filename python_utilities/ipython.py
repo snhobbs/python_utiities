@@ -1,4 +1,6 @@
 import IPython
+import sympy
+
 
 def jupyter_setup():
     from IPython.display import set_matplotlib_formats
@@ -25,6 +27,20 @@ def print_sympy(*args):
                 raise
     IPython.display.display(IPython.display.Math("".join(st)))
 
+
+'''
+Turns passed value to latex with sympy and wraps in a latex equation
+environment. This is necessary to get equation numbering with nbextensions.
+'''
+def display_equation(*values):
+    str_outs = []
+    for value in values:
+        str_out = value
+        if not isinstance(value, str):
+            str_out = sympy.latex(value)
+        str_outs.append(str_out)
+    IPython.display.display(IPython.display.Markdown("\\begin{equation}%s\end{equation}"%"".join(str_outs)))
+
 class Figure:
     def __init__(self):
         self._references = dict()
@@ -41,3 +57,14 @@ class Figure:
     def display(self, name : str, image : IPython.display.Image):
         self.add_reference(name)
         IPython.display.display(image)
+
+
+__figure_references = dict()
+def get_figure_references(name=None):
+    global __figure_references
+    if not name:
+        name = "root"
+
+    if name not in __figure_references:
+        __figure_references[name] = Figure()
+    return __figure_references[name]

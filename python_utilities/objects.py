@@ -26,13 +26,23 @@ class Range:
     def mult(self, a):
         return Range(self.min*a, self.max*a)
 
+
+
 class Temperature:
-    def __init__(self, celsius):
-        self._temp = 0
-        if type(celsius) is Temperature:
-            self.set_celsius(celsius.celsius)
+    def __init__(self, value, unit="celsius"):
+        k = value
+        if unit.lower() in ["celsius", "c"]:
+            k = self.celsius_to_kelvin(value)
+        elif unit.lower() in ["fahrenheit", "f"]:
+            k = self.fahrenheit_to_kelvin(value)
+        elif unit.lower() in ["kelvin", "k"]:
+            pass
         else:
-            self.set_celsius(celsius)
+            raise ValueError("unknown unit %s", str(unit))
+        self._kelvin = k
+
+    def __repr__(self):
+        return str(self.celsius)
 
     def __lt__(self, b):
         return self.kelvin < b.kelvin
@@ -49,18 +59,43 @@ class Temperature:
     def __le__(self, b):
         return self.kelvin <= b.kelvin
 
+    @staticmethod
+    def kelvin_to_celsius(cls, value):
+        return value - 273.15
 
-    def set_celsius(self, t):
-        self.set_kelvin(t + constants.zero_Celsius)
+    @staticmethod
+    def kelvin_to_fahrenheit(cls, value):
+        return 1.8*self.kelvin_to_celsius(value) + 32
 
-    def set_kelvin(self, t):
-        assert(t>=0)
-        self._temp = t
+    @staticmethod
+    def celsius_to_kelvin(cls, value):
+        return value + 273.15
+
+    @staticmethod
+    def fahrenheit_to_kelvin(cls, value):
+        return (value - 32)/1.8
 
     @property
-    def celsius(self):
-        return self._temp - constants.zero_Celsius
+    def k(self):
+        return self._kelvin
 
     @property
     def kelvin(self):
-        return self._temp
+        return self._kelvin
+
+    @property
+    def c(self):
+        return self.celsius
+
+    @property
+    def celsius(self):
+        return self.kelvin_to_celsius(self.kelvin)
+
+    @property
+    def f(self):
+        return self.fahrenheit
+
+    @property
+    def fahrenheit(self):
+        return self.kelvin_to_fahrenheit(self.kelvin)
+

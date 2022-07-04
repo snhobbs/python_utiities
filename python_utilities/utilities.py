@@ -40,3 +40,15 @@ def fit_exponential(x, y, p0=None):
     g = fit[1]
     return g, r0
 
+
+def fit_line(x, y):
+    import numpy as np
+    polyfit = np.polynomial.polynomial.polyfit
+    res = np.polyfit(x, y, 1, full=True)
+    # res = polyfit(x, y, 1, full=True)
+    terms, residual  = res[:2]
+    assert len(terms) == 2
+    if len(residual) == 0:
+        residual = [[0]]
+    assert len(residual) > 0
+    return {"slope": terms[0], "intercept": terms[1], "residual": residual[0]}
