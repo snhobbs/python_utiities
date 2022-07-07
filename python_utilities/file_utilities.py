@@ -2,10 +2,16 @@ import datetime
 import os
 
 
-def make_time_from_file_timestamp(file_string):
+def make_time_from_file_timestamp(file_string: str):
+    if not isinstance(file_string, str):
+        file_string = ""
     split = file_string.split("_")
     isoformat = ".".join(split[-2:])
-    return datetime.datetime.fromisoformat(isoformat)
+    try:
+        time = datetime.datetime.fromisoformat(isoformat)
+    except ValueError:
+        time = datetime.datetime.fromtimestamp(0)
+    return time
 
 
 def make_file_timestamp(now=None):
