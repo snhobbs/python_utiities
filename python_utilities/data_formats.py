@@ -11,13 +11,15 @@ def ReadKeyValueDataFile(string, header_char='#', delim = ':'):
         if len(line) == 0:
             continue # skip line
         if line[0] == header_char:
-            split = line.strip().split(delim)
-            key = split[0].lstrip(header_char).strip()
-            value = delim.join([pt.strip() for pt in split[1:]])
+            split = line.split(delim)
+            key_sections = [pt.strip().lstrip(header_char).strip() for pt in split[:-1]]
+            key = delim.join(key_sections)
+            value = delim.join([pt.strip() for pt in split[-1:]])
             key_value.append((key, value))
         else:
             data.append(line)
     return key_value, data
+
 
 def ReadHpFileFormat(data):
     '''
