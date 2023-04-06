@@ -31,6 +31,7 @@ def ReadHpFileFormat(data):
         ??
         ```
     returns: x, y array
+    FIXME this is actually mathcad format
     '''
     import numpy as np
     npoints, step_size, _ = data[:3]
@@ -41,3 +42,22 @@ def ReadHpFileFormat(data):
     return [pt*step_size for pt in range(len(y))], y
 
 
+
+def read_hp_spreadsheet(fname):
+    '''
+    reads spreadsheet output from HP scopes with preamble.
+    Generate these using the WFMCONVERT function.
+    '''
+    import pandas
+    from io import StringIO
+    with open(fname, 'r') as f:
+        text = f.read().split(";")
+        header_line, data_text = text[:-1], text[-1]
+        header_array = [pt.split(' ', 1) for pt in header_line]
+    header = dict(header_array)
+    for key, value in header.items():
+        header[key] = value.strip('"')
+    data = pandas.read_csv(StringIO(data_text), names=["x", "y"])
+    data[header["YUNIT"]] = data['y']*float(header["YMULT"]) + float(header["YOFF"])
+    data[header["XUNIT"]] = data['x']
+    return header, data
