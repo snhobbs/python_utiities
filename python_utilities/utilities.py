@@ -52,3 +52,12 @@ def fit_line(x, y):
         residual = [[0]]
     assert len(residual) > 0
     return {"slope": terms[0], "intercept": terms[1], "residual": residual[0]}
+
+
+'''
+returns the closest index of y near value
+'''
+def find_nearest(array, value):
+    array = np.asarray(array)
+    idx = (np.abs(array - value)).argmin()
+    return idx
