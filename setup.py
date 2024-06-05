@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(name='python_utilities',
-      version='0.0.1',
+      version='0.0.16',
       description='',
       long_description_content_type="text/markdown",
       url='https://github.com/snhobbs/python_utilities',
